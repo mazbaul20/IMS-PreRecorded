@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
+use App\Mail\OTPMail;
 use App\Helper\JWTToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -73,5 +75,26 @@ class UserController extends Controller
             'message' => "User login successful",
             'user' => $user,
         ],200);
+    }//End method
+
+    public function SendOTPCode(Request $request){
+        $email = $request->input('email');
+        $otp = rand(1000, 9999); // Generate a random 4-digit OTP
+        $count = User::where('email',$email)->count();
+
+        if($count == 1){
+            Mail::to($email)->send(new OTPMail($otp));
+            User::where('email', $email)->update(['otp' => $otp]);
+            return response()->json([
+                'status' => 'success',
+                'message' => "4 Digit {$otp} Code has been sent to your email!",
+            ],200);
+        }else{
+            return response()->json([
+                'status' => 'failed',
+                'message' => "unauthorized",
+            ]);
+        }
+
     }//End method
 }
