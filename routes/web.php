@@ -15,3 +15,6 @@ Route::get('/',[HomeController::class, 'HomePage'])->name('HomePage');
 
 //User all routes
 Route::post('/user-registration',[UserController::class, 'UserRegistration'])->name('UserRegistration');
+Route::post('/user-login',[UserController::class, 'UserLogin'])->name('user.login');
+Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
+
