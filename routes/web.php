@@ -23,3 +23,5 @@ Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middlewar
 
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
 Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
+Route::post('/reset-password',[UserController::class, 'ResetPassword'])->middleware([TokenVerificationMiddleware::class]);
+
