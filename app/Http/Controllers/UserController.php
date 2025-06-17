@@ -97,4 +97,26 @@ class UserController extends Controller
         }
 
     }//End method
+
+    public function VerifyOTP(Request $request){
+        $email = $request->input('email');
+        $otp = $request->input('otp');
+
+        $count = User::where('email', $email)->where('otp', $otp)->count();
+
+        if($count==1){
+            User::where('email', $email)->update(['otp'=> '0']);
+            $token = JWTToken::CreateTokenForSetPassword($email);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'OTP verification successful',
+            ],200)->cookie('token', $token, 60*24*30);
+        }else{
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'OTP verification failed',
+            ],200);
+        }
+    }//End method
 }

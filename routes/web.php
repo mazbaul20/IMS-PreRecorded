@@ -22,3 +22,4 @@ Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.log
 Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middleware([TokenVerificationMiddleware::class])->name('dashboard.page');
 
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
+Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
