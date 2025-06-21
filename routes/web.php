@@ -30,6 +30,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     // Category all routes
     Route::controller(CategoryController::class)->group(function (){
         Route::post('/category-create', 'CategoryCreate')->name('category.create');
+        Route::get('/list-category', 'CategoryList')->name('category.list');
 
     });
 

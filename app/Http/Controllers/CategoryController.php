@@ -20,4 +20,12 @@ class CategoryController extends Controller
             'message' => "Category created successfully",
         ]);
     }//End method
+
+    public function CategoryList(Request $request){
+        $user_id = $request->header('id');
+
+        $categories = Category::where('user_id',$user_id)->get();
+        return $categories;
+    }//End method
+
 }
