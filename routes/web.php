@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 
 // Route::get('/', function () {
@@ -24,4 +25,13 @@ Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middlewar
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
 Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
 Route::post('/reset-password',[UserController::class, 'ResetPassword'])->middleware([TokenVerificationMiddleware::class]);
+
+Route::middleware(TokenVerificationMiddleware::class)->group(function () {
+    // Category all routes
+    Route::controller(CategoryController::class)->group(function (){
+        Route::post('/category-create', 'CategoryCreate')->name('category.create');
+
+    });
+
+});
 
