@@ -28,4 +28,11 @@ class CategoryController extends Controller
         return $categories;
     }//End method
 
+    public function CategoryById(Request $request){
+        $user_id = $request->header('id');
+
+        $category = Category::where('id',$request->input('id'))->where('user_id',$user_id)->first();
+        return $category;
+    }//End method
+
 }
