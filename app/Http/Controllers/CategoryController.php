@@ -35,4 +35,26 @@ class CategoryController extends Controller
         return $category;
     }//End method
 
+    public function CategoryUpdate(Request $request){
+        $user_id = $request->header('id');
+
+        Category::where('id',$request->input('id'))->where('user_id',$user_id)->update([
+            'name'=> $request->name,
+        ]);
+        return response()->json([
+            'status' => "success",
+            'message' => "Category updated successfully",
+        ]);
+    }//End method
+
+    public function CategoryDelete(Request $request,$id){
+        $user_id = $request->header('id');
+
+        Category::where('id',$id)->where('user_id',$user_id)->delete();
+        return response()->json([
+            'status' => "success",
+            'message' => "Category deleted successfully",
+        ]);
+    }//End method
+
 }
