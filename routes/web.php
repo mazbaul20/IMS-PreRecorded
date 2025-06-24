@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 
@@ -34,6 +35,12 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
         Route::post('/category-by-id', 'CategoryById')->name('category.by.id');
         Route::post('/update-category', 'CategoryUpdate')->name('category.update');
         Route::get('/delete-category/{id}', 'CategoryDelete')->name('category.delete');
+    });
+
+    // Product all routes
+    Route::controller(ProductController::class)->group(function (){
+        Route::post('/create-product', 'ProductCreate')->name('product.create');
+
     });
 
 });
