@@ -41,4 +41,11 @@ class ProductController extends Controller
             'message' => "Product created successfully",
         ]);
     }//End Method
+
+    public function ProductList(Request $request){
+        $user_id = $request->header('id');
+
+        $products = Product::where('user_id',$user_id)->get();
+        return $products;
+    }//End Method
 }

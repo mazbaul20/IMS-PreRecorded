@@ -40,6 +40,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     // Product all routes
     Route::controller(ProductController::class)->group(function (){
         Route::post('/create-product', 'ProductCreate')->name('product.create');
+        Route::get('/list-product', 'ProductList')->name('product.list');
 
     });
 
