@@ -48,4 +48,9 @@ class ProductController extends Controller
         $products = Product::where('user_id',$user_id)->get();
         return $products;
     }//End Method
+
+    public function ProductById(Request $request){
+        $user_id = $request->header('id');
+        return Product::where('id',$request->input('id'))->where('user_id',$user_id)->first();
+    }//End Method
 }
