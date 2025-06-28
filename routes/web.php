@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 
 // Route::get('/', function () {
@@ -44,6 +45,12 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
         Route::post('/product-by-id', 'ProductById')->name('product.by.id');
         Route::post('/update-product', 'ProductUpdate')->name('product.update');
         Route::get('/delete-product/{id}', 'ProductDelete')->name('product.delete');
+    });
+
+    // Product all routes
+    Route::controller(CustomerController::class)->group(function (){
+        Route::post('/create-customer', 'CustomerCreate')->name('customer.create');
+
     });
 
 });
