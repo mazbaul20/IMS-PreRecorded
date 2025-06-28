@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -54,6 +55,11 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
         Route::post('/customer-by-id', 'CustomerById')->name('customer.by.id');
         Route::post('/update-customer', 'CustomerUpdate')->name('customer.update');
         Route::get('/delete-customer/{id}', 'CustomerDelete')->name('customer.delete');
+    });
+
+    // Invoice all routes
+    Route::controller(InvoiceController::class)->group(function (){
+        Route::post('/invoice-create', 'InvoiceCreate')->name('invoice.create');
     });
 
 });
