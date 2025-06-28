@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Invoice;
 use App\Models\Product;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\InvoiceProduct;
 use Illuminate\Support\Facades\DB;
@@ -74,5 +75,19 @@ class InvoiceController extends Controller
     public function InvoiceList(Request $request){
         $user_id = $request->header('id');
         return Invoice::where('user_id',$user_id)->with('customer')->get();
+    }//End Method
+
+    public function InvoiceDetails(Request $request){
+        $user_id = $request->header('id');
+
+        $customerDetails = Customer::where('user_id',$user_id)->where('id', $request->input('customer_id'))->first();
+        $invoiceDetails = Invoice::where('user_id',$user_id)->where('id', $request->input('invoice_id'))->first();
+        $invoiceProducts = InvoiceProduct::where('user_id',$user_id)->where('invoice_id', $request->input('invoice_id'))->with('product')->get();
+
+        return [
+            'customer' => $customerDetails,
+            'invoice' => $invoiceDetails,
+            'products' => $invoiceProducts,
+        ];
     }//End Method
 }
