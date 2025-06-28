@@ -50,6 +50,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     // Product all routes
     Route::controller(CustomerController::class)->group(function (){
         Route::post('/create-customer', 'CustomerCreate')->name('customer.create');
+        Route::get('/list-customer', 'CustomerList')->name('customer.list');
 
     });
 
