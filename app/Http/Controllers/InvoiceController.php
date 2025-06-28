@@ -70,4 +70,9 @@ class InvoiceController extends Controller
             ]);
         }
     }//End Method
+
+    public function InvoiceList(Request $request){
+        $user_id = $request->header('id');
+        return Invoice::where('user_id',$user_id)->with('customer')->get();
+    }//End Method
 }

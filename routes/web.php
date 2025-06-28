@@ -60,6 +60,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     // Invoice all routes
     Route::controller(InvoiceController::class)->group(function (){
         Route::post('/invoice-create', 'InvoiceCreate')->name('invoice.create');
+        Route::get('/invoice-list', 'InvoiceList')->name('invoice.list');
     });
 
 });
