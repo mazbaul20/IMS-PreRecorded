@@ -62,6 +62,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
         Route::post('/invoice-create', 'InvoiceCreate')->name('invoice.create');
         Route::get('/invoice-list', 'InvoiceList')->name('invoice.list');
         Route::post('/invoice-details', 'InvoiceDetails')->name('invoice.details');
+        Route::get('/invoice-delete/{id}', 'InvoiceDelete')->name('invoice.delete');
     });
 
 });

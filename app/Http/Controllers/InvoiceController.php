@@ -90,4 +90,26 @@ class InvoiceController extends Controller
             'products' => $invoiceProducts,
         ];
     }//End Method
+
+    public function InvoiceDelete(Request $request,$id){
+        DB::beginTransaction();
+        try{
+            $user_id = $request->header('id');
+            InvoiceProduct::where('user_id',$user_id)->where('invoice_id', $id)->delete();
+            Invoice::where('user_id',$user_id)->where('id', $id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice deleted successfully',
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Something went wrong, please try again later',
+            ]);
+        }
+    }//End Method
 }
