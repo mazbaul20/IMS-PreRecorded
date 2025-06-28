@@ -47,10 +47,11 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
         Route::get('/delete-product/{id}', 'ProductDelete')->name('product.delete');
     });
 
-    // Product all routes
+    // Customer all routes
     Route::controller(CustomerController::class)->group(function (){
         Route::post('/create-customer', 'CustomerCreate')->name('customer.create');
         Route::get('/list-customer', 'CustomerList')->name('customer.list');
+        Route::post('/customer-by-id', 'CustomerById')->name('customer.by.id');
 
     });
 

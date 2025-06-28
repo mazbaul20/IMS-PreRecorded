@@ -40,4 +40,9 @@ class CustomerController extends Controller
         $user_id = $request->header('id');
         return Customer::where('user_id',$user_id)->get();
     }//End Method
+
+    public function CustomerById(Request $request){
+        $user_id = $request->header('id');
+        return Customer::where('id',$request->input('id'))->where('user_id',$user_id)->first();
+    }//End Method
 }
