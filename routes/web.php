@@ -68,6 +68,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
 
     // Dashboard summary routes
     Route::get('/dashboard-summary', [DashboardController::class, 'DashboardSummary'])->name('dashboard.summary');
-
+    // Profile update route
+    Route::post('/user-update', [UserController::class, 'UserUpdate'])->name('user.update');
 });
 

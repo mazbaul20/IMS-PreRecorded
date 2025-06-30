@@ -137,4 +137,29 @@ class UserController extends Controller
             ], 200);
         }
     }//End method
+
+    public function UserUpdate(Request $request){
+        $user_email = $request->header('email');
+        $new_email = $request->input('email');
+
+        $user = User::where('email', $user_email)->first();
+
+        $user->update([
+            'name' => $request->input('name'),
+            'email' => $new_email,
+            'mobile' => $request->input('mobile'),
+        ]);
+
+        if($user_email !== $new_email){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User updated successfully. you have been logged out due to email change',
+            ])->cookie('token', '', -1);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User updated successfully',
+        ]);
+    }//End method
 }
