@@ -16,8 +16,8 @@ use App\Http\Middleware\TokenVerificationMiddleware;
 //     return "Hello World";
 // });
 
-Route::get('/test',[HomeController::class, 'index'])->name('home');
-Route::get('/',[HomeController::class, 'HomePage'])->name('HomePage');
+Route::get('/',[HomeController::class, 'index'])->name('HomePage');
+Route::get('/test',[HomeController::class, 'HomePage'])->name('Home');
 
 
 //User all routes
