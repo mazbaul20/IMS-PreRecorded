@@ -161,19 +161,30 @@ class UserController extends Controller
 
     public function ResetPassword(Request $request){
         try{
-            $email = $request->header('email');
+            // $email = $request->header('email');
+            $email = $request->session()->get('email','default');
             $password = $request->input('password');
-            User::where('email', $email)->update(['password' => $password]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Password reset successful',
-            ],200);
+            $otp_verify = $request->session()->get('otp_verify','default');
+
+            if($otp_verify === 'yes'){
+                User::where('email', $email)->update(['password' => $password]);
+                $request->session()->flush();
+
+                $data = ['message' => 'Password reset successful', 'status' => true, 'error' => ''];
+                return redirect('/login')->with($data);
+            }else{
+                $data = ['message' => 'Request Fail', 'status' => false, 'error' => ''];
+                return redirect('/reset-password')->with($data);
+            }
+
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'Password reset successful',
+            // ],200);
         }catch(Exception $e){
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Something went wrong, please try again later',
-            ], 200);
+            $data = ['message' => 'Request Fail', 'status' => false, 'error' => ''];
+            return redirect('/reset-password')->with($data);
         }
     }//End method
 
@@ -216,5 +227,9 @@ class UserController extends Controller
 
     public function VerifyOTPPage(){
         return Inertia::render('VerifyOTPPage');
+    }//End method
+
+    public function ResetPasswordPage(){
+        return Inertia::render('ResetPasswordPage');
     }//End method
 }

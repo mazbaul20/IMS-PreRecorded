@@ -30,7 +30,7 @@ Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middlewar
 
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
 Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
-Route::post('/reset-password',[UserController::class, 'ResetPassword'])->middleware([TokenVerificationMiddleware::class]);
+Route::post('/reset-password',[UserController::class, 'ResetPassword'])->middleware([SessionAuthenticate::class]);
 
 Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     // Category all routes
@@ -79,6 +79,4 @@ Route::get('/login',[UserController::class, 'LoginPage'])->name('LoginPage');
 Route::get('/registration',[UserController::class, 'RegistrationPage'])->name('RegistrationPage');
 Route::get('/send-otp',[UserController::class, 'SendOTPPage'])->name('SendOTPPage');
 Route::get('/verify-otp',[UserController::class, 'VerifyOTPPage'])->name('VerifyOTPPage');
-Route::get('/reset-password',function(){
-    return Inertia::render('ResetPasswordPage');
-});
+Route::get('/reset-password',[UserController::class, 'ResetPasswordPage'])->name('ResetPasswordPage')->middleware([SessionAuthenticate::class]);
