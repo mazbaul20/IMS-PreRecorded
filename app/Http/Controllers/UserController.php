@@ -123,30 +123,39 @@ class UserController extends Controller
             // ]);
 
             $data = ['message' => 'unauthorized', 'status' => false, 'error' => ''];
-            return redirect('/send-otp')->with($data);
+            return redirect('/registration')->with($data);
         }
 
     }//End method
 
     public function VerifyOTP(Request $request){
-        $email = $request->input('email');
+        // $email = $request->input('email');
+        $email = $request->session()->get('email','default');
         $otp = $request->input('otp');
 
         $count = User::where('email', $email)->where('otp', $otp)->count();
 
         if($count==1){
             User::where('email', $email)->update(['otp'=> '0']);
-            $token = JWTToken::CreateTokenForSetPassword($email);
+            // $token = JWTToken::CreateTokenForSetPassword($email);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'OTP verification successful',
-            ],200)->cookie('token', $token, 60*24*30);
+            $request->session()->put('otp_verify', 'yes');
+
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'OTP verification successful',
+            // ],200)->cookie('token', $token, 60*24*30);
+
+            $data = ['message' => 'OTP verification successful', 'status' => true, 'error' => ''];
+            return redirect('/reset-password')->with($data);
         }else{
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'OTP verification failed',
-            ],200);
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => 'OTP verification failed',
+            // ],200);
+
+            $data = ['message' => 'OTP verification failed', 'status' => false, 'error' => ''];
+            return redirect('/login')->with($data);
         }
     }//End method
 
@@ -203,5 +212,9 @@ class UserController extends Controller
 
     public function SendOTPPage(){
         return Inertia::render('SendOTPPage');
+    }//End method
+
+    public function VerifyOTPPage(){
+        return Inertia::render('VerifyOTPPage');
     }//End method
 }

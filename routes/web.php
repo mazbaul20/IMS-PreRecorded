@@ -78,6 +78,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
 Route::get('/login',[UserController::class, 'LoginPage'])->name('LoginPage');
 Route::get('/registration',[UserController::class, 'RegistrationPage'])->name('RegistrationPage');
 Route::get('/send-otp',[UserController::class, 'SendOTPPage'])->name('SendOTPPage');
-Route::get('/verify-otp',function (){
-    return Inertia::render('VerifyOTPPage');
+Route::get('/verify-otp',[UserController::class, 'VerifyOTPPage'])->name('VerifyOTPPage');
+Route::get('/reset-password',function(){
+    return Inertia::render('ResetPasswordPage');
 });
