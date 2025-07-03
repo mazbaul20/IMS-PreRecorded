@@ -75,3 +75,4 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
 
 //Frontend all routes
 Route::get('/login',[UserController::class, 'LoginPage'])->name('LoginPage');
+Route::get('/registration',[UserController::class, 'RegistrationPage'])->name('RegistrationPage');
