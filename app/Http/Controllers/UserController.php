@@ -87,17 +87,6 @@ class UserController extends Controller
         ],200)->cookie('token', '', -1);
     }//End method
 
-    public function DashboardPage(Request $request){
-        $user = $request->header('email');
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => "User login successful",
-        //     'user' => $user,
-        // ],200);
-
-        return Inertia::render('DashboardPage',['user' => $user]);
-    }//End method
-
     public function SendOTPCode(Request $request){
         $email = $request->input('email');
         $otp = rand(1000, 9999); // Generate a random 4-digit OTP

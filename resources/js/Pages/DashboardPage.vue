@@ -1,12 +1,12 @@
 <template>
-    <h1>This is Dashboard Page</h1>
-    <h1>Email: {{ page.props.user }}</h1>
+    <SideNavLayout>
+        <SummaryView/>
+    </SideNavLayout>
 </template>
 
 <script setup>
-    import { Link, usePage, router, useForm } from '@inertiajs/vue3';
-    const page = usePage();
-    console.log(page);
+    import SideNavLayout from '../layout/SideNavLayout.vue'
+    import SummaryView from '../Components/Dashboard/SummaryView.vue'
 </script>
 
 <style scoped>

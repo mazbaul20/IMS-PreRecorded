@@ -26,7 +26,7 @@ Route::post('/user-registration',[UserController::class, 'UserRegistration'])->n
 Route::post('/user-login',[UserController::class, 'UserLogin'])->name('user.login');
 Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
 
-Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middleware([SessionAuthenticate::class])->name('dashboard.page');
+Route::get('/DashboardPage',[DashboardController::class, 'DashboardPage'])->middleware([SessionAuthenticate::class])->name('dashboard.page');
 
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
 Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
