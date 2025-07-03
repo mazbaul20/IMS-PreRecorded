@@ -1,5 +1,6 @@
 <?php
 
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -76,3 +77,7 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
 //Frontend all routes
 Route::get('/login',[UserController::class, 'LoginPage'])->name('LoginPage');
 Route::get('/registration',[UserController::class, 'RegistrationPage'])->name('RegistrationPage');
+Route::get('/send-otp',[UserController::class, 'SendOTPPage'])->name('SendOTPPage');
+Route::get('/verify-otp',function (){
+    return Inertia::render('VerifyOTPPage');
+});
