@@ -21,8 +21,8 @@ class SessionAuthenticate
         if($email == 'default'){
             return redirect('/login');
         }else{
-            $request->headers()->set('email', $email);
-            $request->headers()->set('id', $user_id);
+            $request->headers->set('email', $email);
+            $request->headers->set('id', $user_id);
             return $next($request);
         }
     }

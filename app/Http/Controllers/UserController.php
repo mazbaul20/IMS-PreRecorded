@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
+use Inertia\Inertia;
 use App\Mail\OTPMail;
 use App\Helper\JWTToken;
 use Illuminate\Http\Request;
@@ -46,18 +47,30 @@ class UserController extends Controller
 
         if($count !== null){
             //user Login -> JWT Token issue
-            $token = JWTToken::CreateToken($request->input('email'), $count->id);
+            // $token = JWTToken::CreateToken($request->input('email'), $count->id);
+            $email = $request->input('email');
+            $user_id = $count->id;
 
-            return response()->json([
-                'status' => 'success',
-                'message' => "User login successful",
-                'token' => $token,
-            ],200)->cookie('token', $token, time()+60); // Set token cookie for 7 days
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => "User login successful",
+            //     'token' => $token,
+            // ],200)->cookie('token', $token, time()+60); // Set token cookie for 7 days
+
+            $request->session()->put('email', $email);
+            $request->session()->put('user_id', $user_id);
+
+            $data = ['message' => 'User login successful', 'status' => true, 'error' => ''];
+
+            return redirect('/DashboardPage')->with($data);
         }else{
-            return response()->json([
-                'status' => 'failed',
-                'message' => "User login failed",
-            ],200);
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => "User login failed",
+            // ],200);
+            $data = ['message' => 'User login failed', 'status' => false, 'error' => ''];
+
+            return redirect('/login')->with($data);
         }
     }//End method
 
@@ -70,11 +83,13 @@ class UserController extends Controller
 
     public function DashboardPage(Request $request){
         $user = $request->header('email');
-        return response()->json([
-            'status' => 'success',
-            'message' => "User login successful",
-            'user' => $user,
-        ],200);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "User login successful",
+        //     'user' => $user,
+        // ],200);
+
+        return Inertia::render('DashboardPage',['user' => $user]);
     }//End method
 
     public function SendOTPCode(Request $request){
@@ -161,5 +176,9 @@ class UserController extends Controller
             'status' => 'success',
             'message' => 'User updated successfully',
         ]);
+    }//End method
+
+    public function LoginPage(){
+        return Inertia::render('LoginPage');
     }//End method
 }

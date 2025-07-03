@@ -7,6 +7,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Middleware\SessionAuthenticate;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 
@@ -24,7 +25,7 @@ Route::post('/user-registration',[UserController::class, 'UserRegistration'])->n
 Route::post('/user-login',[UserController::class, 'UserLogin'])->name('user.login');
 Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
 
-Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middleware([TokenVerificationMiddleware::class])->name('dashboard.page');
+Route::get('/DashboardPage',[UserController::class, 'DashboardPage'])->middleware([SessionAuthenticate::class])->name('dashboard.page');
 
 Route::post('/send-otp',[UserController::class, 'SendOTPCode'])->name('SendOTPCode');
 Route::post('/verify-otp',[UserController::class, 'VerifyOTP'])->name('VerifyOTP');
@@ -72,3 +73,5 @@ Route::middleware(TokenVerificationMiddleware::class)->group(function () {
     Route::post('/user-update', [UserController::class, 'UserUpdate'])->name('user.update');
 });
 
+//Frontend all routes
+Route::get('/login',[UserController::class, 'LoginPage'])->name('LoginPage');
