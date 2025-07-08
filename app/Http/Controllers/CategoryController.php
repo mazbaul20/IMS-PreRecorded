@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -51,10 +52,19 @@ class CategoryController extends Controller
         $user_id = $request->header('id');
 
         Category::where('id',$id)->where('user_id',$user_id)->delete();
-        return response()->json([
-            'status' => "success",
-            'message' => "Category deleted successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Category deleted successfully",
+        // ]);
+        $data = ['message' => 'Category deleted successfully', 'status' => true, 'error' => ''];
+        return redirect('/CategoryPage')->with($data);
+    }//End method
+
+    public function CategoryPage(Request $request){
+        $user_id = $request->header('id');
+
+        $categories = Category::where('user_id',$user_id)->latest()->get();
+        return Inertia::render('CategoryPage',['categories' => $categories]);
     }//End method
 
 }

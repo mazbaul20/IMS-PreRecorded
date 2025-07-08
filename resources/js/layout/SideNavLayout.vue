@@ -17,10 +17,10 @@
                 <span class="side-bar-item-caption">Dashboard</span>
             </Link>
 
-            <a href="category-list.html" class="side-bar-item">
+            <Link href="/CategoryPage" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-th-list text-green"></i></span>
                 <span class="side-bar-item-caption">Category</span>
-            </a>
+            </Link>
 
             <a href="customer-list.html" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-users text-green"></i></span>
