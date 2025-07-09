@@ -27,10 +27,10 @@
                 <span class="side-bar-item-caption">Customer</span>
             </a>
 
-            <a href="product-list.html" class="side-bar-item">
+            <Link href="/ProductPage" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-box text-green"></i></span>
                 <span class="side-bar-item-caption">Product</span>
-            </a>
+            </Link>
 
             <a href="salePage.html" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-shopping-cart text-green"></i></span>
