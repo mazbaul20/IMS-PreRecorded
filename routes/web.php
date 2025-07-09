@@ -41,6 +41,7 @@ Route::middleware(SessionAuthenticate::class)->group(function () {
         Route::post('/update-category', 'CategoryUpdate')->name('category.update');
         Route::get('/delete-category/{id}', 'CategoryDelete')->name('category.delete');
         Route::get('/CategoryPage', 'CategoryPage')->name('category.page');
+        Route::get('/CategorySavePage', 'CategorySavePage')->name('CategorySavePage');
     });
 
     // Product all routes

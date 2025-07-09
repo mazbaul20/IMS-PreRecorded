@@ -16,10 +16,12 @@ class CategoryController extends Controller
             'name'=> $request->name,
             'user_id' => $user_id,
         ]);
-        return response()->json([
-            'status' => "success",
-            'message' => "Category created successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Category created successfully",
+        // ]);
+        $data = ['message' => 'Category created successfully', 'status' => true, 'error' => ''];
+        return redirect('/CategoryPage')->with($data);
     }//End method
 
     public function CategoryList(Request $request){
@@ -42,10 +44,12 @@ class CategoryController extends Controller
         Category::where('id',$request->input('id'))->where('user_id',$user_id)->update([
             'name'=> $request->name,
         ]);
-        return response()->json([
-            'status' => "success",
-            'message' => "Category updated successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Category updated successfully",
+        // ]);
+        $data = ['message' => 'Category updated successfully', 'status' => true, 'error' => ''];
+        return redirect('/CategoryPage')->with($data);
     }//End method
 
     public function CategoryDelete(Request $request,$id){
@@ -65,6 +69,15 @@ class CategoryController extends Controller
 
         $categories = Category::where('user_id',$user_id)->latest()->get();
         return Inertia::render('CategoryPage',['categories' => $categories]);
+    }//End method
+
+    public function CategorySavePage(Request $request){
+        $category_id = $request->query('id');
+
+        $user_id = $request->header('id');
+
+        $category = Category::where('id',$category_id)->where('user_id',$user_id)->first();
+        return Inertia::render('CategorySavePage',['category' => $category]);
     }//End method
 
 }
