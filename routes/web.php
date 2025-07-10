@@ -52,6 +52,7 @@ Route::middleware(SessionAuthenticate::class)->group(function () {
         Route::post('/update-product', 'ProductUpdate')->name('product.update');
         Route::get('/delete-product/{id}', 'ProductDelete')->name('product.delete');
         Route::get('/ProductPage', 'ProductPage')->name('ProductPage');
+        Route::get('/ProductSavePage', 'ProductSavePage')->name('ProductSavePage');
     });
 
     // Customer all routes

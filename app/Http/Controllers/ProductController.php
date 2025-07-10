@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -38,10 +39,12 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return response()->json([
-            'status' => "success",
-            'message' => "Product created successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Product created successfully",
+        // ]);
+        $data = ['message' => 'Product created successfully', 'status' => true, 'error' => ''];
+        return redirect('/ProductPage')->with($data);
     }//End Method
 
     public function ProductList(Request $request){
@@ -89,10 +92,12 @@ class ProductController extends Controller
 
         $product->save();
 
-        return response()->json([
-            'status' => "success",
-            'message' => "Product updated successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Product updated successfully",
+        // ]);
+        $data = ['message' => 'Product updated successfully', 'status' => true, 'error' => ''];
+        return redirect('/ProductPage')->with($data);
     }//End Method
 
     public function ProductDelete(Request $request,$id){
@@ -128,5 +133,14 @@ class ProductController extends Controller
 
         $products = Product::where('user_id',$user_id)->with('category')->latest()->get();
         return Inertia::render('ProductPage',['products' => $products]);
+    }//End Method
+
+    public function ProductSavePage(Request $request){
+        $user_id = $request->header('id');
+
+        $categories = Category::where('user_id',$user_id)->get();
+        $product = Product::where('id',$request->query('id'))->where('user_id',$user_id)->first();
+
+        return Inertia::render('ProductSavePage',['categories' => $categories,'product' => $product]);
     }//End Method
 }
