@@ -22,10 +22,10 @@
                 <span class="side-bar-item-caption">Category</span>
             </Link>
 
-            <a href="customer-list.html" class="side-bar-item">
+            <Link href="/CustomerPage" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-users text-green"></i></span>
                 <span class="side-bar-item-caption">Customer</span>
-            </a>
+            </Link>
 
             <Link href="/ProductPage" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-box text-green"></i></span>

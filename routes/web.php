@@ -62,6 +62,7 @@ Route::middleware(SessionAuthenticate::class)->group(function () {
         Route::post('/customer-by-id', 'CustomerById')->name('customer.by.id');
         Route::post('/update-customer', 'CustomerUpdate')->name('customer.update');
         Route::get('/delete-customer/{id}', 'CustomerDelete')->name('customer.delete');
+        Route::get('/CustomerPage', 'CustomerPage')->name('CustomerPage');
     });
 
     // Invoice all routes

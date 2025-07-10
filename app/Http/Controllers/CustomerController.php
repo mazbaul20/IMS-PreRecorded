@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Inertia\Inertia;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -70,9 +71,17 @@ class CustomerController extends Controller
     public function CustomerDelete(Request $request,$id){
         $user_id = $request->header('id');
         Customer::where('id',$id)->where('user_id',$user_id)->delete();
-        return response()->json([
-            'status' => "success",
-            'message' => "Customer deleted successfully",
-        ]);
+        // return response()->json([
+        //     'status' => "success",
+        //     'message' => "Customer deleted successfully",
+        // ]);
+        $data = ['message' => 'Customer deleted successfully', 'status' => true, 'error' => ''];
+        return redirect()->back()->with($data);
+    }//End Method
+
+    public function CustomerPage(Request $request){
+        $user_id = $request->header('id');
+        $customers = Customer::where('user_id',$user_id)->latest()->get();
+        return Inertia::render('CustomerPage',['customers' => $customers]);
     }//End Method
 }
