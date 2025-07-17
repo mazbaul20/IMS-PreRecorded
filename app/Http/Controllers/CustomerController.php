@@ -24,16 +24,21 @@ class CustomerController extends Controller
                 'user_id' => $user_id,
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Customer created successfully',
-            ]);
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'Customer created successfully',
+            // ]);
+
+            $data = ['message' => 'Customer created successfully', 'status' => true, 'error' => ''];
+            return redirect('/CustomerPage')->with($data);
 
         }catch(Exception $e){
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Something went wrong, please try again later',
-            ]);
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => 'Something went wrong, please try again later',
+            // ]);
+            $data = ['message' => 'Something went wrong, please try again later', 'status' => false, 'error' => ''];
+            return redirect()->back()->with($data);
         }
     }//End Method
 
@@ -49,7 +54,7 @@ class CustomerController extends Controller
 
     public function CustomerUpdate(Request $request){
         $user_id = $request->header('id');
-         $request->validate([
+        $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'mobile' => 'required',
@@ -61,11 +66,13 @@ class CustomerController extends Controller
             'mobile'=> $request->input('mobile'),
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Customer updated successfully',
-        ]);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'Customer updated successfully',
+        // ]);
 
+        $data = ['message' => 'Customer updated successfully', 'status' => true, 'error' => ''];
+        return redirect('/CustomerPage')->with($data);
     }//End Method
 
     public function CustomerDelete(Request $request,$id){
@@ -83,5 +90,13 @@ class CustomerController extends Controller
         $user_id = $request->header('id');
         $customers = Customer::where('user_id',$user_id)->latest()->get();
         return Inertia::render('CustomerPage',['customers' => $customers]);
+    }//End Method
+
+    public function CustomerSavePage(Request $request){
+        $user_id = $request->header('id');
+        $id = $request->query('id');
+
+        $customer = Customer::where('id',$id)->where('user_id',$user_id)->first();
+        return Inertia::render('CustomerSavePage',['customer' => $customer]);
     }//End Method
 }
