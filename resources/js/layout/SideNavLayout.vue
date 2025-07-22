@@ -37,10 +37,10 @@
                 <span class="side-bar-item-caption">Create Sale</span>
             </a>
 
-            <a href="invoiceList.html" class="side-bar-item">
+            <Link href="InvoiceListPage" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-file-invoice-dollar text-green"></i></span>
                 <span class="side-bar-item-caption">Invoice</span>
-            </a>
+            </Link>
 
             <a href="profileForm.html" class="side-bar-item">
                 <span class="side-bar-item-icon"><i class="fa fa-user-circle text-green"></i></span>

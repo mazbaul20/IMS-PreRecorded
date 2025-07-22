@@ -72,6 +72,7 @@ Route::middleware(SessionAuthenticate::class)->group(function () {
         Route::get('/invoice-list', 'InvoiceList')->name('invoice.list');
         Route::post('/invoice-details', 'InvoiceDetails')->name('invoice.details');
         Route::get('/invoice-delete/{id}', 'InvoiceDelete')->name('invoice.delete');
+        Route::get('/InvoiceListPage', 'InvoiceListPage')->name('InvoiceListPage');
     });
 
     // Dashboard summary routes

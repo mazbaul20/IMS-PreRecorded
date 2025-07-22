@@ -9,6 +9,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Models\InvoiceProduct;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class InvoiceController extends Controller
 {
@@ -100,16 +101,27 @@ class InvoiceController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Invoice deleted successfully',
-            ]);
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'Invoice deleted successfully',
+            // ]);
+            $data = ['message' => 'Invoice deleted successfully', 'status' => true, 'error' => ''];
+            return redirect('/InvoiceListPage')->with($data);
         }catch(Exception $e){
             DB::rollBack();
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Something went wrong, please try again later',
-            ]);
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => 'Something went wrong, please try again later',
+            // ]);
+            $data = ['message' => 'Something went wrong, please try again later', 'status' => false, 'error' => ''];
+            return redirect()->back()->with($data);
         }
+    }//End Method
+
+    public function InvoiceListPage(Request $request){
+        $user_id = $request->header('id');
+        $list = Invoice::where('user_id',$user_id)->with(['customer','invoiceProducts.product'])->get();
+        // return $list;
+        return Inertia::render('InvoiceListPage',['list' => $list]);
     }//End Method
 }
