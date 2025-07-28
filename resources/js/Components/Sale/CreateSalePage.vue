@@ -50,40 +50,42 @@
                             <div class="row">
                                 <div class="col-12">
                                     <p class="text-bold text-xs my-1 text-dark">Total: <i
-                                            class="bi bi-currency-dollar"></i> calculateTotal()</p>
-                                    <p class="text-bold text-xs my-1 text-dark">VAT (vatRate%): <i
-                                            class="bi bi-currency-dollar"></i> vatAmount</p>
-                                    <p><button class="btn btn-info btn-sm my-1 bg-gradient-primary w-40">Apply
+                                            class="bi bi-currency-dollar"></i> {{ calculateTotal() }}</p>
+                                    <p class="text-bold text-xs my-1 text-dark">VAT ({{ vatRate }}%): <i
+                                            class="bi bi-currency-dollar"></i> {{ vatAmount }}</p>
+                                    <p>
+                                        <button @click="applyVat" class="btn btn-info btn-sm my-1 bg-gradient-primary w-40">Apply
                                             VAT</button></p>
-                                    <p><button class="btn btn-secondary btn-sm my-1 bg-gradient-primary w-40">Remove
+                                    <p>
+                                        <button @click="removeVat" class="btn btn-secondary btn-sm my-1 bg-gradient-primary w-40">Remove
                                             VAT</button></p>
 
                                     <p><span class="text-xxs">Discount Mode:</span></p>
-                                    <select>
-                                        <option value="false">Flat Discount</option>
-                                        <option value="true">Percentage Discount</option>
+                                    <select v-model="usePercentageDiscount">
+                                        <option :value="false">Flat Discount</option>
+                                        <option :value="true">Percentage Discount</option>
                                     </select>
                                     <p class="text-bold text-xs my-1 text-dark">Discount: <i
-                                            class="bi bi-currency-dollar"></i> discountAmount </p>
-                                    <div>
+                                            class="bi bi-currency-dollar"></i> {{ discountAmount }} </p>
+                                    <div v-if="!usePercentageDiscount">
                                         <span class="text-xxs">Flat Discount:</span>
-                                        <input type="number" class="form-control w-40" min="0" />
-                                        <p><button class="btn btn-warning btn-sm my-1 bg-gradient-primary w-40">Apply
+                                        <input type="number" v-model="flatDiscount" class="form-control w-40" min="0" />
+                                        <p><button @click="applyDiscount" class="btn btn-warning btn-sm my-1 bg-gradient-primary w-40">Apply
                                                 Flat Discount</button></p>
                                     </div>
-                                    <div>
+                                    <div v-else>
                                         <span class="text-xxs">Discount (%):</span>
-                                        <input type="number" class="form-control w-40" min="0" max="100" step="0.25" />
-                                        <p><button class="btn btn-warning btn-sm my-1 bg-gradient-primary w-40">Apply
+                                        <input type="number" v-model="discountPercent" class="form-control w-40" min="0" max="100" step="0.25" />
+                                        <p><button @click="applyDiscount" class="btn btn-warning btn-sm my-1 bg-gradient-primary w-40">Apply
                                                 Percentage Discount</button></p>
                                     </div>
-                                    <p><button class="btn btn-secondary btn-sm my-1 bg-gradient-primary w-40">Remove
+                                    <p><button @click="removeDiscount" class="btn btn-secondary btn-sm my-1 bg-gradient-primary w-40">Remove
                                             Discount</button></p>
 
                                     <hr class="mx-0 my-2 p-0 bg-secondary" />
                                     <p class="text-bold text-xs my-1 text-dark">Payable: <i
-                                            class="bi bi-currency-dollar"></i> payable</p>
-                                    <p><button
+                                            class="bi bi-currency-dollar"></i> {{ payable }}</p>
+                                    <p><button @click="createInvoice"
                                             class="btn btn-success btn-sm my-3 bg-gradient-primary w-40">Confirm</button>
                                     </p>
                                 </div>
@@ -139,8 +141,8 @@
 <script setup>
 import { usePage, useForm, router } from '@inertiajs/vue3';
 import { createToaster } from "@meforma/vue-toaster";
-import { remove } from 'nprogress';
-import { ref } from 'vue';
+
+import { ref, watch } from 'vue';
 
 const toaster = createToaster({
     position: "top-right",
@@ -234,9 +236,105 @@ const removeProductFromSale = (index)=>{
     selectedProduct.value.splice(index, 1);
     calculateTotal();
     calcualtePayable();
-    remoeVat();
+    removeVat();
     removeDiscount();
     toaster.success("Product removed from sale");
+}
+
+// Calculated section
+const vatRate = ref(5);
+const vatAmount = ref(0);
+const flatDiscount = ref(0);
+const discountPercent = ref(0);
+const total = ref(0);
+const discountAmount = ref(0);
+const usePercentageDiscount = ref(false);
+
+const calculateTotal = ()=>{
+    return selectedProduct.value.reduce((sum, product) => sum + (product.productPrice * product.unit), 0);
+}
+
+const applyVat = () =>{
+    vatAmount.value = (calculateTotal() * vatRate.value) / 100;
+    calculateTotal();
+}
+
+const removeVat = () =>{
+    vatAmount.value = 0;
+    calculateTotal();
+}
+
+const applyDiscount = () =>{
+    if(usePercentageDiscount.value){
+        discountAmount.value = (calculateTotal() * discountPercent.value) / 100;
+    }else{
+        discountAmount.value = flatDiscount.value;
+    }
+    calculateTotal();
+}
+
+const removeDiscount = () =>{
+    discountAmount.value = 0;
+    calculateTotal();
+}
+
+const calcualtePayable = () =>{
+    const totalAmount = calculateTotal();
+    payable.value = totalAmount + vatAmount.value - discountAmount.value
+};
+
+watch(
+    [selectedProduct, vatAmount, discountAmount],
+    () => {
+        calcualtePayable();
+    },
+    { deep: true }
+);
+
+const payable = ref(0);
+
+const form = useForm({
+    customer_id: '',
+    products: '',
+    vat: '',
+    discount: '',
+    payable: calculateTotal(),
+    total: '',
+})
+
+const createInvoice = ()=>{
+    if(!selectedCustomer.value){
+        toaster.warning("Please select a customer");
+        return;
+    }
+    if(selectedProduct.value.length === 0){
+        toaster.warning("Please select a product");
+        return;
+    }
+
+    form.products = selectedProduct.value;
+    form.customer_id = selectedCustomer.value.id;
+    form.total = total.value;
+    form.vat = vatAmount.value;
+    form.discount = discountAmount.value;
+    form.payable = payable.value;
+    const calculatedTotal = calculateTotal();
+
+    form.total = calculatedTotal;
+    form.payable = payable.value;
+
+    form.post('/invoice-create', {
+        onSuccess: () => {
+            if(page.props.flash.status === true){
+                toaster.success(page.props.flash.message);
+                setTimeout(() => {
+                    router.get('/InvoiceListPage');
+                },500)
+            }else{
+                toaster.error(page.props.flash.message);
+            }
+        }
+    });
 }
 
 </script>
