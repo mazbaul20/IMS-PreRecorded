@@ -10,13 +10,13 @@
                             <div class="row">
                                 <div class="col-8">
                                     <span class="text-bold text-dark">BILLED TO</span>
-                                    <p class="text-xs mx-0 my-1">Name: <span>selectedCustomer-name</span></p>
-                                    <p class="text-xs mx-0 my-1">Email: <span>selectedCustomer-email</span></p>
-                                    <p class="text-xs mx-0 my-1">User ID: <span>selectedCustomer-id</span></p>
+                                    <p class="text-xs mx-0 my-1">Name: <span>{{ selectedCustomer?.name || '' }}</span></p>
+                                    <p class="text-xs mx-0 my-1">Email: <span>{{ selectedCustomer?.email || '' }}</span></p>
+                                    <p class="text-xs mx-0 my-1">User ID: <span>{{ selectedCustomer?.id || '' }}</span></p>
                                 </div>
                                 <div class="col-4">
                                     <p class="text-bold mx-0 my-1 text-dark">Invoice</p>
-                                    <p class="text-xs mx-0 my-1">Date: slice date</p>
+                                    <p class="text-xs mx-0 my-1">Date: {{ new Date().toISOString().slice(0,10) }}</p>
                                 </div>
                             </div>
                             <hr class="mx-0 my-2 p-0 bg-secondary" />
@@ -32,14 +32,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="text-center">
-                                                <td> p name </td>
-                                                <td> p unit</td>
-                                                <td> p price</td>
+                                            <tr class="text-center" v-if="selectedProduct.length > 0" v-for="(product,index) in selectedProduct" :key="index">
+                                                <td> {{ product.name}} </td>
+                                                <td> {{ product.unit}}</td>
+                                                <td> {{ product.price}}</td>
                                                 <td>
-                                                    <button class="">-</button>
-                                                    <button class="">+</button>
-                                                    <button class="btn btn-danger btn-sm">Remove</button>
+                                                    <button @click="removeQty(product.id)" class="">-</button>
+                                                    <button @click="addQty(product.id)" class="">+</button>
+                                                    <button @click="removeProductFromSale(index)" class="btn btn-danger btn-sm">Remove</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -124,14 +124,14 @@
                         <input placeholder="Search..." class="form-control mb-2 w-auto form-control-sm" type="text" v-model="searchCustomerValue" />
                         <EasyDataTable buttons-pagination alternating :headers="CustomerHeader" :items="CustomerItem" show-index
                             :rows-per-page="10" :search-field="searchCustomerField" :search-value="searchCustomerValue">
-                            <template #item-number="{ id, name }">
+                            <template #item-number="{ id, name, email }">
                                 <button @click="addCustomerToSale({ id, name, email})" class="btn btn-success btn-sm">Add</button>
                             </template>
                         </EasyDataTable>
                     </div>
                 </div>
+                {{ selectedCustomer }}
             </div>
-            <!-- {{ selectedCustomer }} -->
         </div>
     </div>
 </template>
@@ -139,6 +139,7 @@
 <script setup>
 import { usePage, useForm, router } from '@inertiajs/vue3';
 import { createToaster } from "@meforma/vue-toaster";
+import { remove } from 'nprogress';
 import { ref } from 'vue';
 
 const toaster = createToaster({
@@ -208,6 +209,35 @@ const addProductToSale = (id, image, name, price, productUnit) => {
         }
     }
 }// end addProductToSale
+
+const addQty = (id) => {
+    const product = selectedProduct.value.find((product) => product.id === id);
+    if(product.exitsQty > 0){
+        product.unit++;
+        product.exitsQty--;
+        calculateTotal();
+    }else{
+        toaster.warning(`${product.name} is out of stock`);
+    }
+}
+
+const removeQty = (id) =>{
+    const product = selectedProduct.value.find((product) => product.id === id);
+    if(product.unit > 1){
+        product.unit--;
+        product.exitsQty++;
+        calculateTotal();
+    }
+}
+
+const removeProductFromSale = (index)=>{
+    selectedProduct.value.splice(index, 1);
+    calculateTotal();
+    calcualtePayable();
+    remoeVat();
+    removeDiscount();
+    toaster.success("Product removed from sale");
+}
 
 </script>
 
