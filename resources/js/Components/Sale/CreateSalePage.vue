@@ -94,26 +94,27 @@
             </div>
 
             <!-- Product Selection -->
-            <!-- <div class="col-md-4 col-lg-4 p-2">
+            <div class="col-md-4 col-lg-4 p-2">
                 <div class="card">
                     <div class="card-body">
                         <h4>Select Product</h4>
-                        <input placeholder="Search..." class="form-control mb-2 w-auto form-control-sm" type="text" />
+                        <input v-model="searchProductValue" placeholder="Search..." class="form-control mb-2 w-auto form-control-sm" type="text" />
                         <EasyDataTable buttons-paginations alternating :items="ProductItem" :headers="ProductHeader"
                             :rows-per-page="10" :search-value="searchProductValue" :seach-field="searchProductField">
-                            <template>
-                                <img alt="Product Image" height="40px" width="40px" />
+                            <template #item-image="{ image }">
+                                <img :src="image ? image: '/placeholder.png'" alt="Product Image" height="40px" width="40px" />
                             </template>
 
-                            <template>
-                                <button>
-                                    'Stock Out'
+                            <template #item-action="{ id, image, name, price, unit}">
+                                <button @click="addProductToSale(id, image, name, price, unit )" :class="['btn btn-sm', unit > 0 ? 'btn-success' : 'btn-warning']">
+                                    {{ unit > 0 ? 'Add' : 'Stock Out' }}
                                 </button>
                             </template>
                         </EasyDataTable>
                     </div>
                 </div>
-            </div> -->
+                {{ selectedProduct }}
+            </div>
 
             <!-- Customer Selection -->
             <div class="col-md-4 col-lg-4 p-2">
@@ -130,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            {{ selectedCustomer }}
+            <!-- {{ selectedCustomer }} -->
         </div>
     </div>
 </template>
@@ -161,6 +162,52 @@ const searchCustomerField = ref(['name']);
 const addCustomerToSale = (customer) => {
     selectedCustomer.value = customer;
 }
+
+// Product Selection
+const selectedProduct = ref([])
+
+const ProductHeader = [
+    { text: 'Image', value: 'image' },
+    { text: 'Name', value: 'name' },
+    { text: 'Qty', value: 'unit' },
+    { text: 'Action', value: 'action' },
+]
+
+const ProductItem = ref(page.props.products)
+
+const searchProductValue = ref();
+const searchProductField = ref(['name']);
+
+const addProductToSale = (id, image, name, price, productUnit) => {
+    const exitingProduct = selectedProduct.value.find(product => product.id === id);
+
+    if(exitingProduct){
+        if(exitingProduct.exitsQty > 0){
+            exitingProduct.unit++;
+            exitingProduct.exitsQty--;
+            calculateTotal();
+        }else{
+            toaster.warning(`${name} is out of stock`);
+        }
+    }else{
+        if(productUnit > 0){
+            const product = {
+                id: id,
+                image: image,
+                name: name,
+                price: price,
+                unit: 1,
+                exitsQty: productUnit -1,
+                productPrice: price
+            };
+
+            selectedProduct.value.push(product);
+            calculateTotal();
+        }else{
+            toaster.warning(`${name} is out of stock`);
+        }
+    }
+}// end addProductToSale
 
 </script>
 
