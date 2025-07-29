@@ -25,7 +25,7 @@ Route::get('/test',[HomeController::class, 'HomePage'])->name('Home');
 //User all routes
 Route::post('/user-registration',[UserController::class, 'UserRegistration'])->name('UserRegistration');
 Route::post('/user-login',[UserController::class, 'UserLogin'])->name('user.login');
-Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
+// Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
 
 Route::get('/DashboardPage',[DashboardController::class, 'DashboardPage'])->middleware([SessionAuthenticate::class])->name('dashboard.page');
 
@@ -80,7 +80,8 @@ Route::middleware(SessionAuthenticate::class)->group(function () {
     Route::get('/dashboard-summary', [DashboardController::class, 'DashboardSummary'])->name('dashboard.summary');
     // Profile update route
     Route::post('/user-update', [UserController::class, 'UserUpdate'])->name('user.update');
-
+    Route::get('/ProfilePage',[UserController::class,'ProfilePage'])->name('ProfilePage');
+    Route::get('/user-logout',[UserController::class, 'UserLogout'])->name('user.logout');
     // Sale all routes
     Route::get('/create-sale',[SaleController::class,'SalePage'])->name('sale.page');
 });

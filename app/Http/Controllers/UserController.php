@@ -9,6 +9,7 @@ use App\Mail\OTPMail;
 use App\Helper\JWTToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -81,10 +82,14 @@ class UserController extends Controller
     }//End method
 
     public function UserLogout(){
-        return response()->json([
-            'status' => 'success',
-            'message' => "User logout successful",
-        ],200)->cookie('token', '', -1);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "User logout successful",
+        // ],200)->cookie('token', '', -1);
+
+        Session::flush();
+        $data = ['message' => 'User logout successful', 'status' => true, 'error' => ''];
+        return redirect('/login')->with($data);
     }//End method
 
     public function SendOTPCode(Request $request){
@@ -190,14 +195,20 @@ class UserController extends Controller
         ]);
 
         if($user_email !== $new_email){
-            return response()->json([
-                'status' => 'success',
-                'message' => 'User updated successfully. you have been logged out due to email change',
-            ])->cookie('token', '', -1);
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'User updated successfully. you have been logged out due to email change',
+            // ])->cookie('token', '', -1);
+            Session::flush();
+            return Inertia::location('/login');
         }
 
-        return response()->json([
-            'status' => 'success',
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'User updated successfully',
+        // ]);
+        return redirect()->back()->with([
+            'status' => true,
             'message' => 'User updated successfully',
         ]);
     }//End method
@@ -220,5 +231,12 @@ class UserController extends Controller
 
     public function ResetPasswordPage(){
         return Inertia::render('ResetPasswordPage');
+    }//End method
+
+    public function ProfilePage(Request $request){
+        $user_id = $request->header('id');
+
+        $user = User::where('id', $user_id)->first();
+        return Inertia::render('ProfilePage', ['user' => $user]);
     }//End method
 }
